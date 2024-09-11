@@ -119,7 +119,8 @@ int main() {
                         flag = false;
                     }
                 }
-            } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+            } else if(event.type == sf::Event::KeyPressed &&
+                sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
                 if (poses.size() > 1) {
                     centers.pop_back();
                     ones.pop_back();
@@ -146,7 +147,7 @@ int main() {
                 for (long long y = 0; y < 1500; ++y) {
                     Complex zero(0, 0);
                     auto color = 100 - step(Complex(((double)x - center.x) / one, ((double)y - center.y) / one), zero);
-                    ff.setPixel(x, y, sf::Color(((color * 13) / 100) % 256, 0, ((color * 324) / 100) % 256));
+                    ff.setPixel(x, y, sf::Color(((color * 130) / 100) % 256, ((color * 130) / 100) % 256, ((color * 324) / 100) % 256));
                 }
             }
             poses.push_back(ff);
