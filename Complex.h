@@ -5,6 +5,7 @@ class Complex {
     Complex() = default;
     Complex(const Complex&);
     explicit Complex(const long long&, const long long&);
+    explicit Complex(const long long&);
     Complex(Complex&&) noexcept;
 
     Complex& operator=(Complex) noexcept;
@@ -20,7 +21,10 @@ class Complex {
     Complex operator*(Complex) const;
 
     bool operator==(const Complex&) const;
-
+    bool operator> (const Complex&) const;
+    bool operator< (const Complex&) const;
+    bool operator>=(const Complex &) const;
+    bool operator<=(const Complex &) const;
     [[nodiscard]] long long getA() const;
     [[nodiscard]] long long getB() const;
 
