@@ -6,13 +6,13 @@ void swap(Complex& a, Complex& b) noexcept {
     std::swap(a.b_, b.b_);
 }
 
-long long abs(const Complex& a) {
+double abs(const Complex& a) {
     return a.getA() * a.getA() + a.getB() * a.getB();
 }
 
 
 ComplexPart ComplexPart::operator-() const {
-    return ComplexPart{new long long(-(*(this->b_)))};
+    return ComplexPart{new double(-(*(this->b_)))};
 }
 
 ComplexPart::~ComplexPart() {
@@ -20,23 +20,23 @@ ComplexPart::~ComplexPart() {
 }
 
 ComplexPart operator ""_i(const unsigned long long b_) {
-    return ComplexPart{new long long(static_cast<long long>(b_))};
+    return ComplexPart{new double(static_cast<double>(b_))};
 }
 
 
-Complex::Complex(const long long& a, const long long& b)
-: a_(new long long(a)), b_(new long long(b)) {}
+Complex::Complex(const double& a, const double& b)
+: a_(new double(a)), b_(new double(b)) {}
 
-Complex::Complex(const long long& a): a_(new long long(a)), b_(new long long(0)) {}
+Complex::Complex(const double& a): a_(new double(a)), b_(new double(0)) {}
 
-Complex::Complex(const ComplexPart& b): a_(new long long(0)), b_(new long long(*b.b_)) {}
+Complex::Complex(const ComplexPart& b): a_(new double(0)), b_(new double(*b.b_)) {}
 
 Complex::Complex(Complex&& other) noexcept
 : a_(std::exchange(other.a_, nullptr)),
 b_(std::exchange(other.b_, nullptr)) {}
 
 Complex::Complex(const Complex& other)
-: a_(new long long(*other.a_)), b_(new long long(*other.b_)) {}
+: a_(new double(*other.a_)), b_(new double(*other.b_)) {}
 
 Complex& Complex::operator=(Complex other) noexcept {
     swap(*this, other);
@@ -63,8 +63,8 @@ Complex& Complex::operator*=(const Complex& other) {
     const auto oa = *other.a_;
     const auto ob = *other.b_;
 
-    *this->a_ = (ta * oa + tb * ob);
-    *this->b_ = (ta * ob + tb * oa);
+    *this->a_ = (ta * oa - tb * ob);
+    *this->b_ = (tb * oa + ta * ob);
 
     return *this;
 }
@@ -110,11 +110,11 @@ bool Complex::operator<=(const Complex& other) const {
 }
 
 
-long long Complex::getA() const {
+double Complex::getA() const {
     return *this->a_;
 }
 
-long long Complex::getB() const {
+double Complex::getB() const {
     return *this->b_;
 }
 
