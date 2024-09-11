@@ -11,6 +11,12 @@
 //
 // };
 
+sf::Vector2f operator* (sf::Vector2f a, const long long& b) {
+    a.x *= b;
+    a.y *= b;
+    return a;
+}
+
 class Window : sf::RenderWindow {
     public:
         Window(): sf::RenderWindow({1000, 1000}, "Set") {}
@@ -78,12 +84,15 @@ int main() {
     sf::Vector2f now;
     // c.setPosition(500, 500);
     // c.setFillColor(sf::Color::White);
-    bool flag = false;
     bool resized = true;
     sf::Image ff;
-    sf::Vector2f center(1050, 750);
-    double one = 500;
+    std::vector<sf::Image> poses;
+    std::vector<sf::Vector2f> centers = {{1050, 750}};
+    std::vector<double> ones = {500};
+    bool flag = false;
     while (window.isOpen()) {
+        auto one = ones.back();
+        auto center = centers.back();
         sf::RectangleShape a;
         sf::Event event{};
         while (window.pollEvent(event)) {
@@ -95,28 +104,12 @@ int main() {
                 float mY = sf::Mouse::getPosition(window).y;
                 if (beg == sf::Vector2f{-100, -100}) {
                     beg = sf::Vector2f{mX, mY};
-                } else {
-                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift)) {
-                        if (mX >= beg.x) {
-                            if (mY > beg.y) {
-                                mY = mX - beg.x + beg.y;
-                            } else {
-                                mY = beg.x - mX + beg.y;
-                            }
-                        } else {
-                            if (mY > beg.y) {
-                                mY = beg.x - mX + beg.y;
-                            } else {
-                                mY = mX - beg.x + beg.y;
-                            }
-                        }
-                    }
-                    now = sf::Vector2f{mX, mY};
                 }
+                now = sf::Vector2f{std::max(mX, mY), std::max(mX, mY)};
             } else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
                 if (beg != sf::Vector2f{-100, -100}) {
-                    double w = 1500 / (now - beg).x;
-                    center -= beg;
+                    double w = 1500 / ((now - beg) * 2).x;
+                    center -= (beg - (now - beg));
                     center.x *= w;
                     center.y *= w;
                     one *= w;
@@ -126,6 +119,24 @@ int main() {
                         flag = false;
                     }
                 }
+            } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+                if (poses.size() > 1) {
+                    centers.pop_back();
+                    ones.pop_back();
+                    poses.pop_back();
+                }
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+                center.y += 100;
+                resized = true;
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                center.y -= 100;
+                resized = true;
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+                center.x += 100;
+                resized = true;
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+                center.x -= 100;
+                resized = true;
             }
         }
         window.clear();
@@ -138,18 +149,24 @@ int main() {
                     ff.setPixel(x, y, sf::Color(((color * 13) / 100) % 256, 0, ((color * 324) / 100) % 256));
                 }
             }
+            poses.push_back(ff);
+            centers.push_back(center);
+            ones.push_back(one);
+            resized = false;
         }
 
-        resized = false;
         sf::Texture l;
-        l.loadFromImage(ff);
         sf::Sprite s;
+        l.loadFromImage(poses.back());
         s.setTexture(l);
         s.setPosition(0, 0);
         window.draw(s);
         if (beg != sf::Vector2f{-100.f, -100.f}) {
-            a.setSize(now - beg);
-            a.setPosition(beg);
+            if (now == sf::Vector2f{-100.f, -100.f}) {
+                now = {(float)sf::Mouse::getPosition(window).x, (float)sf::Mouse::getPosition(window).y};
+            }
+            a.setSize((now - beg) * 2);
+            a.setPosition(beg - (now - beg));
             a.setFillColor(sf::Color(3, 144, 252, 100));
             a.setOutlineColor(sf::Color(3, 78, 252, 200));
             a.setOutlineThickness(3);
