@@ -1,11 +1,19 @@
 #pragma once
 
+struct ComplexPart {
+    long long* b_{};
+    ~ComplexPart();
+};
+
+ComplexPart operator""_i(long double);
+
 class Complex {
   public:
     Complex() = default;
     Complex(const Complex&);
     explicit Complex(const long long&, const long long&);
     explicit Complex(const long long&);
+    explicit Complex(const ComplexPart&);
     Complex(Complex&&) noexcept;
 
     Complex& operator=(Complex) noexcept;
@@ -30,6 +38,7 @@ class Complex {
 
     friend void swap(Complex&, Complex&) noexcept;
     friend long long abs(const Complex&);
+    ~Complex();
   private:
     long long* a_{};
     long long* b_{};

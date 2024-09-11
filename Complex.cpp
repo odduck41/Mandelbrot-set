@@ -11,10 +11,21 @@ long long abs(const Complex& a) {
 }
 
 
+ComplexPart::~ComplexPart() {
+    delete b_;
+}
+
+ComplexPart operator ""_i(const long double b_) {
+    return ComplexPart{new long long(static_cast<long long>(b_))};
+}
+
+
 Complex::Complex(const long long& a, const long long& b)
 : a_(new long long(a)), b_(new long long(b)) {}
 
 Complex::Complex(const long long& a): a_(new long long(a)), b_(new long long(0)) {}
+
+Complex::Complex(const ComplexPart& b): a_(new long long(0)), b_(new long long(*b.b_)) {}
 
 Complex::Complex(Complex&& other) noexcept
 : a_(std::exchange(other.a_, nullptr)),
@@ -101,4 +112,9 @@ long long Complex::getA() const {
 
 long long Complex::getB() const {
     return *this->b_;
+}
+
+Complex::~Complex() {
+    delete a_;
+    delete b_;
 }
