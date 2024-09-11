@@ -11,11 +11,15 @@ long long abs(const Complex& a) {
 }
 
 
+ComplexPart ComplexPart::operator-() const {
+    return ComplexPart{new long long(-(*(this->b_)))};
+}
+
 ComplexPart::~ComplexPart() {
     delete b_;
 }
 
-ComplexPart operator ""_i(const long double b_) {
+ComplexPart operator ""_i(const unsigned long long b_) {
     return ComplexPart{new long long(static_cast<long long>(b_))};
 }
 
@@ -67,7 +71,7 @@ Complex& Complex::operator*=(const Complex& other) {
 
 
 Complex Complex::operator-() const {
-    constexpr Complex reverse(-*this->a_, -*this->b_);
+    const Complex reverse(-*this->a_, -*this->b_);
     return reverse;
 }
 

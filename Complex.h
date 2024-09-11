@@ -2,10 +2,11 @@
 
 struct ComplexPart {
     long long* b_{};
+    ComplexPart operator-() const;
     ~ComplexPart();
 };
 
-ComplexPart operator""_i(long double);
+ComplexPart operator""_i(unsigned long long);
 
 class Complex {
   public:
