@@ -81,7 +81,8 @@ int main() {
     bool flag = false;
     bool resized = true;
     sf::Image ff;
-    sf::RectangleShape nw;
+    sf::Vector2f center(1050, 750);
+    double one = 500;
     while (window.isOpen()) {
         sf::RectangleShape a;
         sf::Event event{};
@@ -112,11 +113,18 @@ int main() {
                     }
                     now = sf::Vector2f{mX, mY};
                 }
-            } else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                beg = {-100, -100};
-                if (flag) {
-                    resized = true;
-                    flag = false;
+            } else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+                if (beg != sf::Vector2f{-100, -100}) {
+                    double w = 1500 / (now - beg).x;
+                    center -= beg;
+                    center.x *= w;
+                    center.y *= w;
+                    one *= w;
+                    beg = {-100, -100};
+                    if (flag) {
+                        resized = true;
+                        flag = false;
+                    }
                 }
             }
         }
@@ -126,13 +134,11 @@ int main() {
             for (long long x = 0; x < 1500; ++x) {
                 for (long long y = 0; y < 1500; ++y) {
                     Complex zero(0, 0);
-                    auto color = 100 - step(Complex(((double)x - 1050) / 500, ((double)y - 750) / 500), zero);
-                    ff.setPixel(x, y, sf::Color(((color * 256) / 100) % 256, 0, ((color * 256) / 100) % 256));
+                    auto color = 100 - step(Complex(((double)x - center.x) / one, ((double)y - center.y) / one), zero);
+                    ff.setPixel(x, y, sf::Color(((color * 13) / 100) % 256, 0, ((color * 324) / 100) % 256));
                 }
             }
         }
-
-
 
         resized = false;
         sf::Texture l;

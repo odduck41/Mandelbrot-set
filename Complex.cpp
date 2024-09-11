@@ -6,13 +6,13 @@ void swap(Complex& a, Complex& b) noexcept {
     std::swap(a.b_, b.b_);
 }
 
-double abs(const Complex& a) {
+long double abs(const Complex& a) {
     return a.getA() * a.getA() + a.getB() * a.getB();
 }
 
 
 ComplexPart ComplexPart::operator-() const {
-    return ComplexPart{new double(-(*(this->b_)))};
+    return ComplexPart{new long double(-(*(this->b_)))};
 }
 
 ComplexPart::~ComplexPart() {
@@ -20,23 +20,23 @@ ComplexPart::~ComplexPart() {
 }
 
 ComplexPart operator ""_i(const unsigned long long b_) {
-    return ComplexPart{new double(static_cast<double>(b_))};
+    return ComplexPart{new long double(static_cast<long double>(b_))};
 }
 
 
-Complex::Complex(const double& a, const double& b)
-: a_(new double(a)), b_(new double(b)) {}
+Complex::Complex(const long double& a, const long double& b)
+: a_(new long double(a)), b_(new long double(b)) {}
 
-Complex::Complex(const double& a): a_(new double(a)), b_(new double(0)) {}
+Complex::Complex(const long double& a): a_(new long double(a)), b_(new long double(0)) {}
 
-Complex::Complex(const ComplexPart& b): a_(new double(0)), b_(new double(*b.b_)) {}
+Complex::Complex(const ComplexPart& b): a_(new long double(0)), b_(new long double(*b.b_)) {}
 
 Complex::Complex(Complex&& other) noexcept
 : a_(std::exchange(other.a_, nullptr)),
 b_(std::exchange(other.b_, nullptr)) {}
 
 Complex::Complex(const Complex& other)
-: a_(new double(*other.a_)), b_(new double(*other.b_)) {}
+: a_(new long double(*other.a_)), b_(new long double(*other.b_)) {}
 
 Complex& Complex::operator=(Complex other) noexcept {
     swap(*this, other);
@@ -110,11 +110,11 @@ bool Complex::operator<=(const Complex& other) const {
 }
 
 
-double Complex::getA() const {
+long double Complex::getA() const {
     return *this->a_;
 }
 
-double Complex::getB() const {
+long double Complex::getB() const {
     return *this->b_;
 }
 

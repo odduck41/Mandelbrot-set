@@ -1,7 +1,7 @@
 #pragma once
 
 struct ComplexPart {
-    double* b_{};
+    long double* b_{};
     ComplexPart operator-() const;
     ~ComplexPart();
 };
@@ -12,8 +12,8 @@ class Complex {
   public:
     Complex() = default;
     Complex(const Complex&);
-    explicit Complex(const double&, const double&);
-    explicit Complex(const double&);
+    explicit Complex(const long double&, const long double&);
+    explicit Complex(const long double&);
     explicit Complex(const ComplexPart&);
     Complex(Complex&&) noexcept;
 
@@ -34,14 +34,14 @@ class Complex {
     bool operator< (const Complex&) const;
     bool operator>=(const Complex &) const;
     bool operator<=(const Complex &) const;
-    [[nodiscard]] double getA() const;
-    [[nodiscard]] double getB() const;
+    [[nodiscard]] long double getA() const;
+    [[nodiscard]] long double getB() const;
 
     friend void swap(Complex&, Complex&) noexcept;
-    friend double abs(const Complex&);
+    friend long double abs(const Complex&);
     ~Complex();
   private:
-    double* a_{};
-    double* b_{};
+    long double* a_{};
+    long double* b_{};
 };
 
