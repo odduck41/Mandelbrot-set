@@ -35,15 +35,24 @@ int main() {
     std::vector<sf::Vector2f> centers = {{1050, 750}};
     std::vector<double> ones = {500};
     bool flag = false;
+    sf::Clock ck;
+    bool focused = true;
     while (window.isOpen()) {
         auto one = ones.back();
         auto center = centers.back();
         sf::RectangleShape a;
         sf::Event event{};
         while (window.pollEvent(event)) {
+
             if (event.type == sf::Event::Closed) {
                 window.close();
-            } else if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            } else if(event.type == sf::Event::LostFocus) {
+                focused = false;
+            } else if (event.type == sf::Event::GainedFocus) {
+                focused = true;
+            }
+            if (!focused) break;
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 float mX = sf::Mouse::getPosition(window).x;
                 float mY = sf::Mouse::getPosition(window).y;
                 if (beg == sf::Vector2f{-100, -100} || !flag) {
@@ -109,6 +118,7 @@ int main() {
             // if (!poses.empty()) {
             //     ff = poses.back();
             // }
+            sf::Time beg_ = ck.getElapsedTime();
             for (long long x = 0; x < 1500; ++x) {
                 for (long long y = 0; y < 1500; ++y) {
                     Complex C(
@@ -125,7 +135,8 @@ int main() {
                     );
                 }
             }
-
+            sf::Time end_ = ck.getElapsedTime();
+            std::cout << end_.asMilliseconds() - beg_.asMilliseconds() << std::endl;
             poses.push_back(ff);
             centers.push_back(center);
             ones.push_back(one);
