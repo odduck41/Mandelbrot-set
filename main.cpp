@@ -105,7 +105,18 @@ int main() {
                 if (beg == sf::Vector2f{-100, -100}) {
                     beg = sf::Vector2f{mX, mY};
                 }
-                now = sf::Vector2f{std::max(mX, mY), std::max(mX, mY)};
+                float nX, nY;
+                if (mX - beg.x < 0) {
+                    nX = -(mX - beg.x);
+                } else {
+                    nX = mX - beg.x;
+                }
+                if (mY - beg.y < 0) {
+                    nY = -(mY - beg.y);
+                } else {
+                    nY = mY - beg.y;
+                }
+                now = beg + sf::Vector2f{std::max(nX, nY), std::max(nX, nY)};
             } else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
                 if (beg != sf::Vector2f{-100, -100}) {
                     double w = 1500 / ((now - beg) * 2).x;
