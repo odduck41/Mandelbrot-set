@@ -4,6 +4,7 @@
 #include <SFML/Window.hpp>
 #include <map>
 #include <cmath>
+#include <thread>
 #include "Complex.h"
 
 // class Selected : sf::RectangleShape {
@@ -59,8 +60,10 @@ class Window : sf::RenderWindow {
         std::map<std::string, sf::RectangleShape*> obj;
 };
 
-long long step(const Complex& C, Complex& nw, long long steps = 0) {
-    for (; steps <= STEPS; ++steps) {
+inline long long step(const Complex& C) {
+    Complex nw(0, 0);
+    long long steps = 0;
+    for (; steps < STEPS; ++steps) {
         if (abs(nw) > 4) {
             return steps;
         }
@@ -71,21 +74,14 @@ long long step(const Complex& C, Complex& nw, long long steps = 0) {
 }
 
 int main() {
-    // sf::RectangleShape e({100, 100});
-    // Window w;
-    // e.setPosition(100, 100);
-    // e.setFillColor(sf::Color::Green);
-    // w.addObj("fff", &e);
-    // e.setFillColor(sf::Color::Cyan);
-    // w.loop();
     sf::RenderWindow window({1500, 1500}, "Set");
     sf::Vector2f beg{-100, -100};
     sf::Vector2f now;
-    // c.setPosition(500, 500);
-    // c.setFillColor(sf::Color::White);
-    bool resized = true;
+    bool resized = false;
     sf::Image ff;
+    ff.loadFromFile("..\\start.png");
     std::vector<sf::Image> poses;
+    poses.push_back(ff);
     std::vector<sf::Vector2f> centers = {{1050, 750}};
     std::vector<double> ones = {500};
     bool flag = false;
@@ -156,13 +152,17 @@ int main() {
                     flag = false;
                 }
         }
+
         window.clear();
         if (resized) {
             ff.create(1500, 1500);
+            // if (!poses.empty()) {
+            //     ff = poses.back();
+            // }
             for (long long x = 0; x < 1500; ++x) {
                 for (long long y = 0; y < 1500; ++y) {
-                    Complex zero(0, 0);
-                    auto color = STEPS - step(Complex(((double)x - center.x) / one, ((double)y - center.y) / one), zero);
+                    Complex C(((double)x - center.x) / one, ((double)y - center.y) / one);
+                    auto color = STEPS - step(C);
                     ff.setPixel(x, y, sf::Color((4 * color) % 256, (6 * color) % 256, (color * 8) % 256));
                 }
             }
@@ -171,8 +171,15 @@ int main() {
             ones.push_back(one);
             beg = {-100.f, -100.f};
             resized = false;
+            // window.clear();
+            // sf::Texture l;
+            // sf::Sprite s;
+            // l.loadFromImage(poses.back());
+            // s.setTexture(l);
+            // s.setPosition(0, 0);
+            // window.draw(s);
+            // window.display();
         }
-
         sf::Texture l;
         sf::Sprite s;
         l.loadFromImage(poses.back());
