@@ -40,7 +40,6 @@ int main() {
     while (window.isOpen()) {
         auto one = ones.back();
         auto center = centers.back();
-        sf::RectangleShape a;
         sf::Event event{};
         while (window.pollEvent(event)) {
 
@@ -71,7 +70,8 @@ int main() {
                 }
                 flag = true;
                 now = beg + sf::Vector2f{std::max(nX, nY), std::max(nX, nY)};
-            } else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left) && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+            } else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)
+                && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
                 if (beg != sf::Vector2f{-100, -100}) {
                     double w = 1500 / ((now - beg) * 2).x;
                     center -= (beg - (now - beg));
@@ -83,7 +83,8 @@ int main() {
                     resized = true;
                 }
             } else if(event.type == sf::Event::KeyPressed &&
-                sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+                sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)
+                && sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
                 flag = false;
                 if (poses.size() > 1) {
                     beg = {-100.f, -100.f};
@@ -158,6 +159,7 @@ int main() {
         s.setPosition(0, 0);
         window.draw(s);
         if (beg != sf::Vector2f{-100.f, -100.f}) {
+            sf::RectangleShape a;
             if (now == sf::Vector2f{-100.f, -100.f}) {
                 now = {(float)sf::Mouse::getPosition(window).x, (float)sf::Mouse::getPosition(window).y};
             }
