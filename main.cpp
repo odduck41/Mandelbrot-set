@@ -4,13 +4,8 @@
 #include <SFML/Window.hpp>
 #include <map>
 #include <cmath>
-#include <thread>
 #include "Complex.h"
 
-// class Selected : sf::RectangleShape {
-//     public:
-//
-// };
 #define STEPS 256
 sf::Vector2f operator* (sf::Vector2f a, const long long& b) {
     a.x *= b;
@@ -18,59 +13,14 @@ sf::Vector2f operator* (sf::Vector2f a, const long long& b) {
     return a;
 }
 
-class Window : sf::RenderWindow {
-    public:
-        Window(): sf::RenderWindow({1000, 1000}, "Set") {}
-        void addObj(const std::string& name, sf::RectangleShape* shape) {
-            obj[name] = shape;
-        }
-        void rmObj(const std::string& name) {
-            obj.erase(name);
-        }
-        void connect(const sf::Event::EventType& type, const std::function<void()> &todo) {
-            todo_[type] = todo;
-        }
-
-        void loop() {
-            while (this->isOpen()) {
-                sf::Event event{};
-                while (this->pollEvent(event)) {
-                    if (event.type == sf::Event::Closed) {
-                        this->close();
-                        return;
-                    }
-                    for (auto&[ev, func]: todo_) {
-                        if (event.type == ev) {
-                            func();
-                        }
-                    }
-                }
-                this->clear();
-                for (auto& [_, shape]: obj) {
-                    this->draw(*shape);
-                }
-                this->display();
-            }
-        }
-        ~Window() override {
-            loop();
-        }
-    private:
-        std::map<sf::Event::EventType, std::function<void()>> todo_;
-        std::map<std::string, sf::RectangleShape*> obj;
-};
-
 inline long long step(const Complex& C) {
     Complex nw(0, 0);
     long long steps = 0;
-    for (; steps < STEPS; ++steps) {
-        if (abs(nw) > 4) {
-            return steps;
-        }
+    for (; steps < STEPS && abs(nw) <= 4; ++steps) {
         nw *= nw;
         nw += C;
     }
-    return STEPS;
+    return steps;
 }
 
 int main() {
@@ -161,11 +111,21 @@ int main() {
             // }
             for (long long x = 0; x < 1500; ++x) {
                 for (long long y = 0; y < 1500; ++y) {
-                    Complex C(((double)x - center.x) / one, ((double)y - center.y) / one);
+                    Complex C(
+                        (static_cast<double>(x) - center.x) / one,
+                        (static_cast<double>(y) - center.y) / one
+                    );
+
                     auto color = STEPS - step(C);
-                    ff.setPixel(x, y, sf::Color((4 * color) % 256, (6 * color) % 256, (color * 8) % 256));
+
+                    ff.setPixel(x, y, sf::Color(
+                        (4 * color) % 256,
+                        (6 * color) % 256,
+                        (8 * color) % 256)
+                    );
                 }
             }
+
             poses.push_back(ff);
             centers.push_back(center);
             ones.push_back(one);
