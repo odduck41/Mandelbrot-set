@@ -24,7 +24,7 @@ inline long long step(const Complex& C) {
     return steps;
 }
 
-void generatePart(sf::Image& image, long long startY, long long height, long long width,
+void generatePart(sf::Image& image, const long long startY, const long long height, const long long width,
     const double& one, const sf::Vector2f& center) {
     for (long long y = startY; y < startY + height; ++y) {
         for (long long x = 0; x < width; ++x) {
