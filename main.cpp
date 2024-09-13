@@ -59,7 +59,7 @@ int main() {
     ff.loadFromFile("..\\start.png");
 
     std::vector poses{ff}; poses.reserve(30);
-    std::vector<Vector2d> centers = {{1050, 750}}; centers.reserve(30);
+    std::vector<Vector2d> centers = {{WIDTH * 1050. / 1500., HEIGHT / 2.}}; centers.reserve(30);
     std::vector ones = {WIDTH / 3.}; ones.reserve(30);
 
 
