@@ -8,7 +8,9 @@
 
 #define STEPS 256
 
-sf::Vector2f operator* (sf::Vector2f a, const float& b) {
+typedef sf::Vector2<double> Vector2d;
+
+Vector2d operator* (Vector2d a, const double& b) {
     a.x *= b;
     a.y *= b;
     return a;
@@ -25,7 +27,7 @@ inline long long step(const Complex& C) {
 }
 
 void generatePart(sf::Image& image, const long long startY, const long long height, const long long width,
-    const double& one, const sf::Vector2f& center) {
+    const double& one, const Vector2d& center) {
     for (long long y = startY; y < startY + height; ++y) {
         for (long long x = 0; x < width; ++x) {
             Complex C(
@@ -49,14 +51,14 @@ int main() {
 
 
     sf::RenderWindow window({1500, 1500}, "Set");
-    sf::Vector2f beg{-100, -100};
-    sf::Vector2f now;
+    Vector2d beg{-100, -100};
+    Vector2d now;
     bool resized = false;
     sf::Image ff;
     ff.loadFromFile("..\\start.png");
     std::vector<sf::Image> poses;
     poses.push_back(ff);
-    std::vector<sf::Vector2f> centers = {{1050, 750}};
+    std::vector<Vector2d> centers = {{1050, 750}};
     std::vector<double> ones = {500};
     bool flag = false;
     bool focused = true;
@@ -75,12 +77,12 @@ int main() {
             }
             if (!focused) break;
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                float mX = static_cast<float>(sf::Mouse::getPosition(window).x);
-                float mY = static_cast<float>(sf::Mouse::getPosition(window).y);
-                if (beg == sf::Vector2f{-100, -100} || !flag) {
-                    beg = sf::Vector2f{mX, mY};
+                double mX = static_cast<double>(sf::Mouse::getPosition(window).x);
+                double mY = static_cast<double>(sf::Mouse::getPosition(window).y);
+                if (beg == Vector2d{-100, -100} || !flag) {
+                    beg = Vector2d{mX, mY};
                 }
-                float nX, nY;
+                double nX, nY;
                 if (mX - beg.x < 0) {
                     nX = -(mX - beg.x);
                 } else {
@@ -92,11 +94,11 @@ int main() {
                     nY = mY - beg.y;
                 }
                 flag = true;
-                now = beg + sf::Vector2f{std::max(nX, nY), std::max(nX, nY)};
+                now = beg + Vector2d{std::max(nX, nY), std::max(nX, nY)};
             } else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)
                 && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-                if (beg != sf::Vector2f{-100, -100}) {
-                    float w = ((now - beg) * 2).x;
+                if (beg != Vector2d{-100, -100}) {
+                    double w = ((now - beg) * 2).x;
                     center -= (beg - (now - beg));
                     center.x *= 1500;
                     center.x /= w;
@@ -168,14 +170,14 @@ int main() {
         s.setTexture(l);
         s.setPosition(0, 0);
         window.draw(s);
-        if (beg != sf::Vector2f{-100.f, -100.f}) {
+        if (beg != Vector2d{-100.f, -100.f}) {
             sf::RectangleShape a;
-            if (now == sf::Vector2f{-100.f, -100.f}) {
-                now = {static_cast<float>(sf::Mouse::getPosition(window).x),
-                    static_cast<float>(sf::Mouse::getPosition(window).y)};
+            if (now == Vector2d{-100.f, -100.f}) {
+                now = {static_cast<double>(sf::Mouse::getPosition(window).x),
+                    static_cast<double>(sf::Mouse::getPosition(window).y)};
             }
-            a.setSize((now - beg) * 2);
-            a.setPosition(beg - (now - beg));
+            a.setSize(sf::Vector2f((now - beg) * 2));
+            a.setPosition(sf::Vector2f(beg - (now - beg)));
             a.setFillColor(sf::Color(3, 144, 252, 100));
             a.setOutlineColor(sf::Color(3, 78, 252, 200));
             a.setOutlineThickness(3);
