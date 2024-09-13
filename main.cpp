@@ -7,6 +7,7 @@
 #include "Complex.h"
 
 #define STEPS 256
+
 sf::Vector2f operator* (sf::Vector2f a, const long long& b) {
     a.x *= b;
     a.y *= b;
