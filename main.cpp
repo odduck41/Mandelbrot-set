@@ -8,7 +8,7 @@
 
 #define STEPS 256
 
-sf::Vector2f operator* (sf::Vector2f a, const long long& b) {
+sf::Vector2f operator* (sf::Vector2f a, const float& b) {
     a.x *= b;
     a.y *= b;
     return a;
@@ -45,7 +45,7 @@ void generatePart(sf::Image& image, long long startY, long long height, long lon
 }
 
 int main() {
-    const int numThreads = std::thread::hardware_concurrency();
+    const auto numThreads = std::thread::hardware_concurrency();
 
 
     sf::RenderWindow window({1500, 1500}, "Set");
@@ -59,7 +59,6 @@ int main() {
     std::vector<sf::Vector2f> centers = {{1050, 750}};
     std::vector<double> ones = {500};
     bool flag = false;
-    sf::Clock ck;
     bool focused = true;
     while (window.isOpen()) {
         auto one = ones.back();
@@ -76,8 +75,8 @@ int main() {
             }
             if (!focused) break;
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-                float mX = sf::Mouse::getPosition(window).x;
-                float mY = sf::Mouse::getPosition(window).y;
+                float mX = static_cast<float>(sf::Mouse::getPosition(window).x);
+                float mY = static_cast<float>(sf::Mouse::getPosition(window).y);
                 if (beg == sf::Vector2f{-100, -100} || !flag) {
                     beg = sf::Vector2f{mX, mY};
                 }
@@ -97,11 +96,14 @@ int main() {
             } else if (!sf::Mouse::isButtonPressed(sf::Mouse::Left)
                 && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
                 if (beg != sf::Vector2f{-100, -100}) {
-                    double w = 1500 / ((now - beg) * 2).x;
+                    float w = ((now - beg) * 2).x;
                     center -= (beg - (now - beg));
-                    center.x *= w;
-                    center.y *= w;
-                    one *= w;
+                    center.x *= 1500;
+                    center.x /= w;
+                    center.y *= 1500;
+                    center.y /= w;
+                    one *= 1500;
+                    one /= w;
                     beg = {-100, -100};
                     flag = false;
                     resized = true;
@@ -142,10 +144,10 @@ int main() {
             ff.create(1500, 1500);
 
             std::vector<std::thread> threads;
-            int partHeight = 1500 / numThreads;
-            for (int i = 0; i < numThreads; ++i) {
-                int startY = i * partHeight;
-                int heightToProcess = (i == numThreads - 1) ? (1500 - startY) : partHeight;
+            auto partHeight = 1500 / numThreads;
+            for (auto i = 0ull; i < numThreads; ++i) {
+                auto startY = i * partHeight;
+                auto heightToProcess = (i == numThreads - 1) ? (1500 - startY) : partHeight;
                 threads.emplace_back(generatePart,
                     std::ref(ff), startY, heightToProcess, 1500, one, center);
 
@@ -169,7 +171,8 @@ int main() {
         if (beg != sf::Vector2f{-100.f, -100.f}) {
             sf::RectangleShape a;
             if (now == sf::Vector2f{-100.f, -100.f}) {
-                now = {(float)sf::Mouse::getPosition(window).x, (float)sf::Mouse::getPosition(window).y};
+                now = {static_cast<float>(sf::Mouse::getPosition(window).x),
+                    static_cast<float>(sf::Mouse::getPosition(window).y)};
             }
             a.setSize((now - beg) * 2);
             a.setPosition(beg - (now - beg));
