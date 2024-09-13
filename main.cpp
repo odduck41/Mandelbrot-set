@@ -35,7 +35,7 @@ void generatePart(sf::Image& image, const long long startY, const long long heig
                         (static_cast<double>(y) - center.y) / one
                     );
 
-            auto color = STEPS - step(C);
+            const auto color = STEPS - step(C);
 
             image.setPixel(x, y, sf::Color(
                 (4 * color) % 256,
