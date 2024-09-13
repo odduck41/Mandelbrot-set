@@ -49,7 +49,7 @@ void generatePart(sf::Image& image, const long long startY, const long long heig
 }
 
 int main() {
-    constexpr auto numThreads = std::thread::hardware_concurrency();
+    const auto numThreads = std::thread::hardware_concurrency();
     sf::RenderWindow window({WIDTH, HEIGHT}, "Set");
 
     Vector2d beg{-100, -100};
