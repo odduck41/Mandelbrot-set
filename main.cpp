@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <map>
+#include <thread>
 #include <cmath>
 #include "Complex.h"
 
@@ -23,7 +23,30 @@ inline long long step(const Complex& C) {
     return steps;
 }
 
+void generatePart(sf::Image& image, long long startY, long long height, long long width,
+    const double& one, const sf::Vector2f& center) {
+    for (long long y = startY; y < startY + height; ++y) {
+        for (long long x = 0; x < width; ++x) {
+            Complex C(
+                        (static_cast<double>(x) - center.x) / one,
+                        (static_cast<double>(y) - center.y) / one
+                    );
+
+            auto color = STEPS - step(C);
+
+            image.setPixel(x, y, sf::Color(
+                (4 * color) % 256,
+                (6 * color) % 256,
+                (8 * color) % 256)
+            );
+        }
+    }
+}
+
 int main() {
+    const int numThreads = std::thread::hardware_concurrency();
+
+
     sf::RenderWindow window({1500, 1500}, "Set");
     sf::Vector2f beg{-100, -100};
     sf::Vector2f now;
@@ -116,41 +139,25 @@ int main() {
         window.clear();
         if (resized) {
             ff.create(1500, 1500);
-            // if (!poses.empty()) {
-            //     ff = poses.back();
-            // }
-            sf::Time beg_ = ck.getElapsedTime();
-            for (long long x = 0; x < 1500; ++x) {
-                for (long long y = 0; y < 1500; ++y) {
-                    Complex C(
-                        (static_cast<double>(x) - center.x) / one,
-                        (static_cast<double>(y) - center.y) / one
-                    );
 
-                    auto color = STEPS - step(C);
+            std::vector<std::thread> threads;
+            int partHeight = 1500 / numThreads;
+            for (int i = 0; i < numThreads; ++i) {
+                int startY = i * partHeight;
+                int heightToProcess = (i == numThreads - 1) ? (1500 - startY) : partHeight;
+                threads.emplace_back(generatePart,
+                    std::ref(ff), startY, heightToProcess, 1500, one, center);
 
-                    ff.setPixel(x, y, sf::Color(
-                        (4 * color) % 256,
-                        (6 * color) % 256,
-                        (8 * color) % 256)
-                    );
-                }
             }
-            sf::Time end_ = ck.getElapsedTime();
-            std::cout << end_.asMilliseconds() - beg_.asMilliseconds() << std::endl;
+
+            for (auto& thread : threads) {
+                thread.join();
+            }
             poses.push_back(ff);
             centers.push_back(center);
             ones.push_back(one);
             beg = {-100.f, -100.f};
             resized = false;
-            // window.clear();
-            // sf::Texture l;
-            // sf::Sprite s;
-            // l.loadFromImage(poses.back());
-            // s.setTexture(l);
-            // s.setPosition(0, 0);
-            // window.draw(s);
-            // window.display();
         }
         sf::Texture l;
         sf::Sprite s;
