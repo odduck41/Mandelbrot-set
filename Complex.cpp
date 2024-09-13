@@ -28,11 +28,10 @@ Complex::Complex(const long double& a): a_(a), b_(0) {}
 Complex::Complex(const ComplexPart& b): a_(0), b_(b.b_) {}
 
 Complex::Complex(Complex&& other) noexcept
-: a_(std::exchange(other.a_, nullptr)),
-b_(std::exchange(other.b_, nullptr)) {}
+: a_(std::exchange(other.a_, 0)),
+b_(std::exchange(other.b_, 0)) {}
 
-Complex::Complex(const Complex& other)
-: a_(other.a_), b_(other.b_) {}
+Complex::Complex(const Complex& other) = default;
 
 Complex& Complex::operator=(Complex other) noexcept {
     swap(*this, other);
