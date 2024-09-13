@@ -1,9 +1,9 @@
 #pragma once
 
 struct ComplexPart {
-    long double* b_{};
+    long double b_{};
     ComplexPart operator-() const;
-    ~ComplexPart();
+    ~ComplexPart() = default;
 };
 
 ComplexPart operator""_i(unsigned long long);
@@ -39,9 +39,9 @@ class Complex {
 
     friend void swap(Complex&, Complex&) noexcept;
     friend long double abs(const Complex&);
-    ~Complex();
+    ~Complex() = default;
   private:
-    long double* a_{};
-    long double* b_{};
+    long double a_{};
+    long double b_{};
 };
 
