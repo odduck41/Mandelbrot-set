@@ -2,8 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <thread>
-#include "Complex.h"
 #include <vector>
+#include <map>
+#include <functional>
+#include "Complex.h"
 #define WIDTH (long long)1500
 #define HEIGHT (long long)1500
 
@@ -41,10 +43,12 @@ class Mandelbrot {
 class App final : public sf::RenderWindow {
   public:
     App();
+    void connect(const sf::Event::EventType&, const std::function<void()>&);
     ~App() override;
   private:
     void loop_();
     static constexpr long long height_ = 800;
     static constexpr long long width_ = 800;
+    std::map<sf::Event::EventType, std::function<void()>> onEvent;
     std::vector<Mandelbrot> states_;
 };

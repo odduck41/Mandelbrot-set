@@ -66,3 +66,32 @@ long long Mandelbrot::steps_(const Complex &C) {
     }
     return steps;
 }
+
+App::~App() {
+    loop_();
+}
+
+void App::connect(const sf::Event::EventType& ev, const std::function<void()>& func) {
+    onEvent[ev] = func;
+}
+
+void App::loop_() {
+    while (this->isOpen()) {
+        sf::Event event{};
+        while (this->pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                this->close();
+                return;
+            }
+
+            if (onEvent.contains(event.type)) {
+                onEvent[event.type]();
+            }
+        }
+        states_.back().draw(*this);
+    }
+}
+
+App::App() : sf::RenderWindow({width_, height_}, "Mandelbrot") {
+
+}
