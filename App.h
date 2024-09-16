@@ -33,6 +33,7 @@ inline Vector2d& operator/= (Vector2d& a, const double& b) {
 class Mandelbrot {
   public:
     Mandelbrot() = default;
+    Mandelbrot(const Vector2d&, const double&);
     Mandelbrot(const sf::Image&, const Vector2d&, const double&);
     void draw(sf::RenderWindow&);
     [[nodiscard]] Vector2d getCenter() const {

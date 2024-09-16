@@ -1,5 +1,15 @@
 #include "App.h"
 
+Mandelbrot::Mandelbrot(const Vector2d& center, const double& scale)
+: center_(center), scale_(scale) {
+    generated_ = true;
+    if constexpr (WIDTH == 800) {
+        image_.loadFromFile("../start800x800.png");
+    } else {
+        image_.loadFromFile("../start1500x1500.png");
+    }
+}
+
 Mandelbrot::Mandelbrot(const sf::Image& img, const Vector2d& center, const double& scale)
 : image_(img), center_(center), scale_(scale) {}
 
@@ -123,7 +133,7 @@ void App::loop_() {
 }
 
 App::App() : sf::RenderWindow({width_, height_}, "Mandelbrot") {
-    nextStep();
+    states_.emplace_back(center_, scale_);
 }
 
 void App::nextStep() {
