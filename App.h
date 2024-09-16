@@ -61,7 +61,7 @@ class Selector final : public sf::RectangleShape {
         return beg_;
     }
     [[nodiscard]] double getSide() const {
-        return size_.x * 2;
+        return (size_.x - beg_.x) * 2;
     }
   private:
     Vector2d beg_;

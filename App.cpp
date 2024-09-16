@@ -135,6 +135,8 @@ void App::nextStep() {
 void App::prevStep() {
     if (states_.size() == 1) return;
     states_.pop_back();
+    center_ = states_.back().getCenter();
+    scale_ = states_.back().getScale();
 }
 
 Selector::Selector(const Vector2d& beg): beg_(beg), size_(beg) {
