@@ -73,6 +73,7 @@ App::~App() {
 }
 
 void App::loop_() {
+    bool realised = true;
     while (this->isOpen()) {
         sf::Event event{};
         while (this->pollEvent(event)) {
@@ -81,10 +82,26 @@ void App::loop_() {
                 return;
             }
 
-
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                if (realised) {
+                    delete selector_;
+                    selector_ = nullptr;
+                    realised = false;
+                }
+                if (selector_ == nullptr) {
+                    selector_ = new Selector(Vector2d(sf::Mouse::getPosition(*this)));
+                } else {
+                    selector_->update(Vector2d(sf::Mouse::getPosition(*this)));
+                }
+            } else {
+                realised = true;
+            }
         }
         this->clear();
         states_.back().draw(*this);
+        if (selector_ != nullptr) {
+            selector_->draw(*this);
+        }
         this->display();
     }
 }
@@ -103,3 +120,34 @@ void App::prevStep() {
     if (states_.size() == 1) return;
     states_.pop_back();
 }
+
+Selector::Selector(const Vector2d& beg): beg_(beg), size_(beg) {
+    this->setFillColor(sf::Color(3, 144, 252, 100));
+    this->setOutlineColor(sf::Color(3, 78, 252, 200));
+    this->setOutlineThickness(3);
+
+}
+
+void Selector::update(const Vector2d& now) {
+    if (const double mX = now.x; mX - beg_.x < 0) {
+        size_.x = beg_.x - mX;
+    } else {
+        size_.x = mX - beg_.x;
+    }
+
+    if (const double mY = now.y; mY - beg_.y < 0) {
+        size_.y = beg_.y - mY;
+    } else {
+        size_.y = mY - beg_.y;
+    }
+
+    size_ = beg_ + Vector2d{std::max(size_.x, size_.y), std::max(size_.x, size_.y)};
+
+    this->setPosition(sf::Vector2f(beg_ - (size_ - beg_)));
+    this->setSize(sf::Vector2f((size_ - beg_) * 2));
+}
+
+void Selector::draw(sf::RenderWindow& window) const {
+    window.draw(*this);
+}
+

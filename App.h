@@ -41,9 +41,12 @@ class Mandelbrot {
 class Selector final : public sf::RectangleShape {
   public:
     Selector() = default;
-    explicit Selector(Vector2d);
-    void update(Vector2d);
-    void draw(sf::RenderWindow&);
+    explicit Selector(const Vector2d&);
+    void update(const Vector2d&);
+    void draw(sf::RenderWindow&) const;
+    [[nodiscard]] Vector2d getBegin() const {
+      return beg_;
+    }
   private:
     Vector2d beg_;
     Vector2d size_;
@@ -62,4 +65,5 @@ class App final : public sf::RenderWindow {
     std::vector<Mandelbrot> states_;
     Vector2d center_{width_ * 1050. / 1500., height_ / 2.};
     double scale_{width_ * 1. / 3};
+    Selector* selector_{};
 };
