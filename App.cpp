@@ -31,7 +31,8 @@ void Mandelbrot::generate_() {
         } else {
             heightToProcess = part_;
         }
-        threads.emplace_back(part_, y, heightToProcess);
+        std::thread t(&Mandelbrot::part_, this, y, heightToProcess);
+        threads.push_back(std::move(t));
     }
 
     for (auto& thread: threads) {
@@ -71,10 +72,6 @@ App::~App() {
     loop_();
 }
 
-void App::connect(const sf::Event::EventType& ev, const std::function<void()>& func) {
-    onEvent[ev] = func;
-}
-
 void App::loop_() {
     while (this->isOpen()) {
         sf::Event event{};
@@ -84,14 +81,25 @@ void App::loop_() {
                 return;
             }
 
-            if (onEvent.contains(event.type)) {
-                onEvent[event.type]();
-            }
+
         }
+        this->clear();
         states_.back().draw(*this);
+        this->display();
     }
 }
 
 App::App() : sf::RenderWindow({width_, height_}, "Mandelbrot") {
+    nextStep();
+}
 
+void App::nextStep() {
+    sf::Image image;
+    image.create(width_, height_);
+    states_.emplace_back(image, center_, scale_);
+}
+
+void App::prevStep() {
+    if (states_.size() == 1) return;
+    states_.pop_back();
 }

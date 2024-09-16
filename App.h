@@ -3,8 +3,6 @@
 #include <SFML/Window.hpp>
 #include <thread>
 #include <vector>
-#include <map>
-#include <functional>
 #include "Complex.h"
 #define WIDTH (long long)1500
 #define HEIGHT (long long)1500
@@ -36,19 +34,32 @@ class Mandelbrot {
     static long long steps_(const Complex& C);
     sf::Image image_;
     Vector2d center_;
-    double scale_ = 800. / 3;
+    double scale_ = WIDTH / 3.;
     bool generated_{};
+};
+
+class Selector final : public sf::RectangleShape {
+  public:
+    Selector() = default;
+    explicit Selector(Vector2d);
+    void update(Vector2d);
+    void draw(sf::RenderWindow&);
+  private:
+    Vector2d beg_;
+    Vector2d size_;
 };
 
 class App final : public sf::RenderWindow {
   public:
     App();
-    void connect(const sf::Event::EventType&, const std::function<void()>&);
+    void nextStep();
+    void prevStep();
     ~App() override;
   private:
     void loop_();
-    static constexpr long long height_ = 800;
-    static constexpr long long width_ = 800;
-    std::map<sf::Event::EventType, std::function<void()>> onEvent;
+    static constexpr long long height_ = HEIGHT;
+    static constexpr long long width_ = WIDTH;
     std::vector<Mandelbrot> states_;
+    Vector2d center_{width_ * 1050. / 1500., height_ / 2.};
+    double scale_{width_ * 1. / 3};
 };
