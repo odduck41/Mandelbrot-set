@@ -17,6 +17,19 @@ inline Vector2d operator* (Vector2d a, const double& b) {
     return a;
 }
 
+
+inline Vector2d& operator*= (Vector2d& a, const double& b) {
+    a.x *= b;
+    a.y *= b;
+    return a;
+}
+
+inline Vector2d& operator/= (Vector2d& a, const double& b) {
+	  a.x /= b;
+	  a.y /= b;
+	  return a;
+}
+
 class Mandelbrot {
   public:
     Mandelbrot() = default;
@@ -45,7 +58,10 @@ class Selector final : public sf::RectangleShape {
     void update(const Vector2d&);
     void draw(sf::RenderWindow&) const;
     [[nodiscard]] Vector2d getBegin() const {
-      return beg_;
+        return beg_;
+    }
+    [[nodiscard]] double getSide() const {
+        return size_.x * 2;
     }
   private:
     Vector2d beg_;

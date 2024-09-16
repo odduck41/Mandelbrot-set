@@ -81,7 +81,6 @@ void App::loop_() {
                 this->close();
                 return;
             }
-
             if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 if (realised) {
                     delete selector_;
@@ -93,6 +92,23 @@ void App::loop_() {
                 } else {
                     selector_->update(Vector2d(sf::Mouse::getPosition(*this)));
                 }
+            } else if (selector_ != nullptr
+            && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)
+            && !sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                center_ -= Vector2d(selector_->getPosition());
+                (center_ *= width_) /= selector_->getSide();
+
+                (scale_ *= width_) /= selector_->getSide();
+
+                this->nextStep();
+
+                realised = true;
+                delete selector_;
+                selector_ = nullptr;
+            } else if (event.type == sf::Event::KeyPressed &&
+            sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)
+            && sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
+                this->prevStep();
             } else {
                 realised = true;
             }
@@ -150,4 +166,3 @@ void Selector::update(const Vector2d& now) {
 void Selector::draw(sf::RenderWindow& window) const {
     window.draw(*this);
 }
-
