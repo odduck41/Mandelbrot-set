@@ -35,7 +35,7 @@ void generatePart(sf::Image& image, const long long startY, const long long heig
             Complex C(
                         (static_cast<double>(x) - center.x) / one,
                         (static_cast<double>(y) - center.y) / one
-                    );
+            );
 
             const auto color = STEPS - step(C);
 
@@ -152,7 +152,7 @@ int main() {
             ff.create(WIDTH, HEIGHT);
             std::vector<std::thread> threads;
 
-            auto partHeight = WIDTH / numThreads;
+            auto partHeight = HEIGHT / numThreads;
             for (auto i = 0ull; i < numThreads; ++i) {
                 auto startY = i * partHeight;
                 auto heightToProcess = (i == numThreads - 1) ? (1500 - startY) : partHeight;
