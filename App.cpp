@@ -1,6 +1,6 @@
 #include "App.h"
 
-Mandelbrot::Mandelbrot(const sf::Image& img, const Vector2d& center, const Vector2d& scale)
+Mandelbrot::Mandelbrot(const sf::Image& img, const Vector2d& center, const double& scale)
 : image_(img), center_(center), scale_(scale) {}
 
 void Mandelbrot::draw(sf::RenderWindow& window) {

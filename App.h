@@ -20,8 +20,14 @@ inline Vector2d operator* (Vector2d a, const double& b) {
 class Mandelbrot {
   public:
     Mandelbrot() = default;
-    Mandelbrot(const sf::Image&, const Vector2d&, const Vector2d&);
+    Mandelbrot(const sf::Image&, const Vector2d&, const double&);
     void draw(sf::RenderWindow&);
+    [[nodiscard]] Vector2d getCenter() const {
+       return center_;
+    }
+    [[nodiscard]] double getScale() const {
+      return scale_;
+    }
   private:
     void part_(const unsigned&, const unsigned&);
     void generate_();
