@@ -87,6 +87,7 @@ void App::loop_() {
     while (this->isOpen()) {
         sf::Event event{};
         while (this->pollEvent(event)) {
+            if (!this->hasFocus()) break;
             if (event.type == sf::Event::Closed) {
                 this->close();
                 return;
