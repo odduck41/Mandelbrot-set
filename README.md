@@ -5,7 +5,7 @@
 # Hot keys🔥
 Left mouse button - select scale area(move button)\
 Enter - enter the selected area\
-Ctrl + Z - previous area/last stage\
+Ctrl + Z - previous area/last stage
 
 # Info 🧐
 (+) I use 256 steps to define if the point is in the set. This is really much. So I decide to use threads.\
