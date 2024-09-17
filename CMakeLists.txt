@@ -6,7 +6,9 @@ option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 add_executable(Mandelbrot_set main.cpp
         Complex.h
-        Complex.cpp)
+        Complex.cpp
+        App.cpp
+        App.h)
 
 set(SFML_DIR "C:/Users/GDcat/CLionProjects/Mandelbrot_set/cmake-build-debug/SFML-2.6.1/lib/cmake/SFML")
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
