@@ -2,12 +2,18 @@
 
 Mandelbrot::Mandelbrot(const Vector2d& center, const double& scale)
 : center_(center), scale_(scale) {
-    generated_ = true;
     if constexpr (WIDTH == 800) {
+        generated_ = true;
         image_.loadFromFile("../start800x800.png");
-    } else {
-        image_.loadFromFile("../start1500x1500.png");
+        return;
     }
+    if constexpr (WIDTH == 1500) {
+        generated_ = true;
+        image_.loadFromFile("../start1500x1500.png");
+        return;
+    }
+    image_.create(WIDTH, HEIGHT);
+    generate_();
 }
 
 Mandelbrot::Mandelbrot(const sf::Image& img, const Vector2d& center, const double& scale)
