@@ -4,8 +4,8 @@
 #include <thread>
 #include <vector>
 #include "Complex.h"
-#define WIDTH (long long)1500
-#define HEIGHT (long long)1500
+#define WIDTH (long long)800
+#define HEIGHT (long long)800
 
 typedef sf::Vector2<double> Vector2d;
 

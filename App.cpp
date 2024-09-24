@@ -106,6 +106,7 @@ void App::loop_() {
             } else if (selector_ != nullptr
             && sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)
             && !sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                if (selector_->getSide() <= 10) continue;
                 center_ -= Vector2d(selector_->getPosition());
                 (center_ *= width_) /= selector_->getSide();
 
