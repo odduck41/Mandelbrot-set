@@ -9,7 +9,7 @@ Ctrl + Z - previous area/last stage
 
 # Info 🧐
 (+) I use 256 steps to define if the point is in the set. This is really much. So I decide to use threads.\
-(+) I use long double type.
+(+) I use long double type.\
 (+) I split my program to three classes: App, Mandelbrot_set and Selection Area.
 
 # Links 🎱
